@@ -17,6 +17,12 @@
 
 #include "ScriptLoader.h"
 
+//custom
+void AddSC_System_OnPVPKill();
+void AddSC_Reset_OnDuelEnd();
+void AddSC_npc_teleport();
+void AddSC_boss_pvp();
+void AddSC_welcome_script();
 
 //examples
 void AddSC_example_creature();
@@ -1200,6 +1206,10 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
     /* This is where custom scripts should be added. */
-
+    AddSC_System_OnPVPKill();
+	AddSC_Reset_OnDuelEnd();
+	AddSC_npc_teleport();
+	AddSC_boss_pvp();
+	AddSC_welcome_script();
 #endif
 }
