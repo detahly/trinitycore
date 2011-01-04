@@ -1595,6 +1595,26 @@ void Player::Update(uint32 p_time)
     if (!IsInWorld())
         return;
 
+	//CUSTOM-- anti grouping!
+	//Player *player = sObjectMgr.GetPlayer(guid);
+	if (/*player->*/GetAreaId() == 3217)
+	{
+		if (GetGroup())
+		{
+			RemoveFromGroup();
+		}
+	}
+
+	//custom
+	if (!isDead())
+	{
+		if (GetTotalPlayedTime() < 72000 )	//20 hours
+		{
+			if (!HasAura(31305))
+				CastSpell(this,31305,true);
+		}
+	}
+
     // undelivered mail
     if (m_nextMailDelivereTime && m_nextMailDelivereTime <= time(NULL))
     {
@@ -7267,6 +7287,17 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, int32 honor, bool pvpt
     }
 
     honor_f *= sWorld->getRate(RATE_HONOR);
+
+	//custom
+	//recruitAFriend
+	bool recruitAFriend = GetsRecruitAFriendBonus(false);
+
+	if (recruitAFriend)
+		honor_f *= 2;
+
+	if (GetTotalPlayedTime() < 43200) // 12 hours
+		honor_f *= 2;
+
     // Back to int now
     honor = int32(honor_f);
     // honor - for show honor points in log
@@ -7334,6 +7365,10 @@ void Player::ModifyHonorPoints(int32 value)
 
 void Player::ModifyArenaPoints(int32 value)
 {
+	//custom
+	if (GetTotalPlayedTime() < 43200)
+		value *= 2;
+
     if (value < 0)
     {
         if (GetArenaPoints() > sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS))
@@ -7421,6 +7456,10 @@ uint32 Player::GetLevelFromDB(uint64 guid)
 
 void Player::UpdateArea(uint32 newArea)
 {
+	//custom duelzone
+	if (newArea == 1)
+		SetPvP(false);
+
     // FFA_PVP flags are area and not zone id dependent
     // so apply them accordingly
     m_areaUpdateId    = newArea;
@@ -20561,6 +20600,10 @@ void Player::UpdatePvPState(bool onlyFFA)
 
 void Player::UpdatePvP(bool state, bool override)
 {
+	//custom
+	if (GetAreaId() == 1) // dont let change this if in the duel zone
+		return;
+
     if (!state || override)
     {
         SetPvP(state);

@@ -101,11 +101,11 @@ bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
     std::string uptime = secsToTimeString(sWorld->GetUptime());
     uint32 updateTime = sWorld->GetUpdateTime();
 
-    PSendSysMessage(_FULLVERSION);
+	PSendSysMessage("LuminaWoWCore. Developer: Rusfighter and the whole TrinityCore Team. Thank to them!");
     PSendSysMessage(LANG_CONNECTED_PLAYERS, PlayersNum, MaxPlayersNum);
     PSendSysMessage(LANG_CONNECTED_USERS, activeClientsNum, maxActiveClientsNum, queuedClientsNum, maxQueuedClientsNum);
     PSendSysMessage(LANG_UPTIME, uptime.c_str());
-    PSendSysMessage("Update time diff: %u.", updateTime);
+    PSendSysMessage("Delay in ms: %u.", updateTime);
 
     return true;
 }
