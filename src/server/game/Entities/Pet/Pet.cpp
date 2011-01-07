@@ -1987,7 +1987,7 @@ void Pet::SynchronizeLevelWithOwner()
             if (getLevel() > owner->getLevel())
                 GivePetLevel(owner->getLevel());
             else if (getLevel() + 5 < owner->getLevel())
-                GivePetLevel(owner->getLevel() - 5);
+                GivePetLevel(owner->getLevel());
             break;
         default:
             break;
