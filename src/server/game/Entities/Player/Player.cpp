@@ -7457,7 +7457,7 @@ uint32 Player::GetLevelFromDB(uint64 guid)
 void Player::UpdateArea(uint32 newArea)
 {
 	//custom duelzone
-	if (newArea == 1)
+	if (newArea == 1 || newArea == 1741)
 		SetPvP(false);
 
     // FFA_PVP flags are area and not zone id dependent
@@ -20601,7 +20601,7 @@ void Player::UpdatePvPState(bool onlyFFA)
 void Player::UpdatePvP(bool state, bool override)
 {
 	//custom
-	if (GetAreaId() == 1) // dont let change this if in the duel zone
+	if (GetAreaId() == 1 || GetAreaId() == 1741) // dont let change this if in the duel zone
 		return;
 
     if (!state || override)

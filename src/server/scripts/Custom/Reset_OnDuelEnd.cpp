@@ -16,12 +16,6 @@ class Reset_OnDuelEnd : public PlayerScript
                         winner->SetPower(POWER_MANA, winner->GetMaxPower(POWER_MANA));
                         looser->SetHealth(looser->GetMaxHealth());
                         looser->SetPower(POWER_MANA, looser->GetMaxPower(POWER_MANA));
-
-						char str[200];
-						sprintf(str, "You just lost the duel against %s !!", winner->GetName());
-						looser->MonsterWhisper(str, looser->GetGUID(), true);
-						sprintf(str,"You just won the duel against %s !!", looser->GetName());
-						winner->MonsterWhisper(str, winner->GetGUID(), true);
                 }
     }
 
