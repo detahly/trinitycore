@@ -15262,7 +15262,7 @@ bool Player::SatisfyQuestPreviousQuest(Quest const* qInfo, bool msg)
 
 
             // If any of the negative previous quests active, return true
-            if (*iter < 0 && m_QuestStatus.find(prevId) != m_QuestStatus.end())
+            if (*iter < 0 && GetQuestStatus(prevId) != QUEST_STATUS_NONE)
             {
                 // skip one-from-all exclusive group
                 if (qPrevInfo->GetExclusiveGroup() >= 0)
@@ -15283,10 +15283,8 @@ bool Player::SatisfyQuestPreviousQuest(Quest const* qInfo, bool msg)
                     if (exclude_Id == prevId)
                         continue;
 
-                    QuestStatusMap::iterator i_exstatus = m_QuestStatus.find(exclude_Id);
-
                     // alternative quest from group also must be active
-                    if (m_QuestStatus.find(exclude_Id) != m_QuestStatus.end())
+                    if (GetQuestStatus(exclude_Id) != QUEST_STATUS_NONE)
                     {
                         if (msg)
                             SendCanTakeQuestResponse(INVALIDREASON_DONT_HAVE_REQ);
@@ -15406,7 +15404,7 @@ bool Player::SatisfyQuestExclusiveGroup(Quest const* qInfo, bool msg)
         }
 
         // alternative quest already started or completed - but don't check rewarded states if both are repeatable
-        if (m_QuestStatus.find(exclude_Id) != m_QuestStatus.end() || (!(qInfo->IsRepeatable() && Nquest->IsRepeatable()) && m_RewardedQuests.find(exclude_Id) != m_RewardedQuests.end()))
+        if (GetQuestStatus(exclude_Id) != QUEST_STATUS_NONE || (!(qInfo->IsRepeatable() && Nquest->IsRepeatable()) && m_RewardedQuests.find(exclude_Id) != m_RewardedQuests.end()))
         {
             if (msg)
                 SendCanTakeQuestResponse(INVALIDREASON_DONT_HAVE_REQ);
@@ -15422,10 +15420,8 @@ bool Player::SatisfyQuestNextChain(Quest const* qInfo, bool msg)
     if (!nextQuest)
         return true;
 
-    Quest const* Nquest = sObjectMgr->GetQuestTemplate(nextQuest);
-
     // next quest in chain already started or completed
-    if (m_QuestStatus.find(nextQuest) != m_QuestStatus.end() || (!(qInfo->IsRepeatable() && Nquest->IsRepeatable()) && m_RewardedQuests.find(nextQuest) != m_RewardedQuests.end()))
+    if (GetQuestStatus(nextQuest) != QUEST_STATUS_NONE) // GetQuestStatus returns QUEST_STATUS_COMPLETED for rewarded quests
     {
         if (msg)
             SendCanTakeQuestResponse(INVALIDREASON_DONT_HAVE_REQ);
@@ -15446,12 +15442,10 @@ bool Player::SatisfyQuestPrevChain(Quest const* qInfo, bool msg)
 
     for (Quest::PrevChainQuests::const_iterator iter = qInfo->prevChainQuests.begin(); iter != qInfo->prevChainQuests.end(); ++iter)
     {
-        uint32 prevId = *iter;
-
-        QuestStatusMap::iterator i_prevstatus = m_QuestStatus.find(prevId);
+        QuestStatusMap::const_iterator itr = m_QuestStatus.find(*iter);
 
         // If any of the previous quests in chain active, return false
-        if (i_prevstatus != m_QuestStatus.end())
+        if (itr != m_QuestStatus.end() && itr->second.m_status != QUEST_STATUS_NONE)
         {
             if (msg)
                 SendCanTakeQuestResponse(INVALIDREASON_DONT_HAVE_REQ);
