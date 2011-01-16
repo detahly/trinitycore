@@ -22906,9 +22906,9 @@ bool ItemPosCount::isContainedIn(ItemPosCountVec const& vec) const
     return false;
 }
 
-//***********************************
-//-------------TRINITY---------------
-//***********************************
+// ***********************************
+// -------------TRINITY---------------
+// ***********************************
 
 void Player::StopCastingBindSight()
 {
