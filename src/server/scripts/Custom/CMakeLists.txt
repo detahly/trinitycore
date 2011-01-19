@@ -4,6 +4,7 @@ set(scripts_STAT_SRCS
   Custom/System_Killstreak.cpp
   Custom/boss_pvp.cpp
   Custom/welcome.cpp
+  Custom/voterewarder.cpp
 )
 
 message("  -> Prepared: Custom")

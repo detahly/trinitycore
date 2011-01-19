@@ -23,6 +23,7 @@ void AddSC_Reset_OnDuelEnd();
 void AddSC_npc_teleport();
 void AddSC_boss_pvp();
 void AddSC_welcome_script();
+void AddSC_voterewarder();
 
 //examples
 void AddSC_example_creature();
@@ -1213,5 +1214,6 @@ void AddCustomScripts()
 	AddSC_npc_teleport();
 	AddSC_boss_pvp();
 	AddSC_welcome_script();
+    AddSC_voterewarder();
 #endif
 }
