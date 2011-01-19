@@ -859,7 +859,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         else
             scale = cFamily->minScale + float(getLevel() - cFamily->minScaleLevel) / cFamily->maxScaleLevel * (cFamily->maxScale - cFamily->minScale);
 
-        SetFloatValue(OBJECT_FIELD_SCALE_X, scale*1.3f);
+        SetFloatValue(OBJECT_FIELD_SCALE_X, scale*1.4f);
     }
 
     //resistance
@@ -1986,7 +1986,7 @@ void Pet::SynchronizeLevelWithOwner()
         case HUNTER_PET:
             if (getLevel() > owner->getLevel())
                 GivePetLevel(owner->getLevel());
-            else if (getLevel() + 5 < owner->getLevel())
+            else if (getLevel() < owner->getLevel())
                 GivePetLevel(owner->getLevel());
             break;
         default:
