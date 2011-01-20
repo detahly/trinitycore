@@ -5,6 +5,7 @@ set(scripts_STAT_SRCS
   Custom/boss_pvp.cpp
   Custom/welcome.cpp
   Custom/voterewarder.cpp
+  Custom/donationrewarder.cpp
 )
 
 message("  -> Prepared: Custom")

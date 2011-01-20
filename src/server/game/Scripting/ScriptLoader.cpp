@@ -24,6 +24,7 @@ void AddSC_npc_teleport();
 void AddSC_boss_pvp();
 void AddSC_welcome_script();
 void AddSC_voterewarder();
+void AddSC_donationrewarder();
 
 //examples
 void AddSC_example_creature();
@@ -1215,5 +1216,6 @@ void AddCustomScripts()
 	AddSC_boss_pvp();
 	AddSC_welcome_script();
     AddSC_voterewarder();
+    AddSC_donationrewarder();
 #endif
 }
