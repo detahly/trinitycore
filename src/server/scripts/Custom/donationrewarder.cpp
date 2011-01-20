@@ -236,8 +236,8 @@ class donationrewarder : public CreatureScript
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Character Rename - Cost 4 DP", GOSSIP_SENDER_MAIN, 5002);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Race Change - Cost 8 DP", GOSSIP_SENDER_MAIN, 5003);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Faction Change - Cost 13 DP", GOSSIP_SENDER_MAIN, 5004);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "40x Commendation of Bravery - Cost 5 VP", GOSSIP_SENDER_MAIN, 5005);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "200x Champion's Seal - Cost 8 VP", GOSSIP_SENDER_MAIN, 5006);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "40x Commendation of Bravery - Cost 5 DP", GOSSIP_SENDER_MAIN, 5005);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "200x Champion's Seal - Cost 8 DP", GOSSIP_SENDER_MAIN, 5006);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
