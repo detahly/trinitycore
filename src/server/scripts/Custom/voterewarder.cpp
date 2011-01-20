@@ -15,7 +15,7 @@ class voterewarder : public CreatureScript
         {
         }
 
-        void RewardItem(Player* pPlayer, Creature* pCreature, int item , int count, int cost)
+        void Reward(Player* pPlayer, Creature* pCreature, int item , int count, int cost, int type = 3, int32 spell = 0)
         {
             QueryResult result;
             result = CharacterDatabase.PQuery("SELECT votepoints FROM auth.account WHERE id = '%u'", pPlayer->GetSession()->GetAccountId());
@@ -31,33 +31,106 @@ class voterewarder : public CreatureScript
             Field *fields = result->Fetch();
             uint32 points = fields[0].GetUInt32();
 
-            if (item == 0)
+            switch (type)
             {
-                sprintf(str,"You got %u voting points!", points);
-                pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
-            }
-            else
-            {
-                if (points < cost)
+
+                case 1:         // type 1 = rename
                 {
-                     sprintf(str,"You don't have enough points for this item!!");
-                     pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
-                }
-                else
-                {
-                    if (pPlayer->AddItem(item, count))
+                    if (points < cost)
                     {
-                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
-                        sprintf(str,"Your points are taken and your item is given!!!");
+                        sprintf(str,"You don't have enough points to do that!!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                     }
                     else
                     {
-                        sprintf(str,"Item can't be given(your bag is full or you already got the item!)!");
+                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken, Please Relog!!!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->SetAtLoginFlag(AT_LOGIN_RENAME);
                     }
 
                 }
+                break;
+                case 2:   // type 2 = get information
+                {
+                    sprintf(str,"You got %u voting points!", points);
+                    pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                }
+                break;
+                case 3: // type 3(default) = item
+                {
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points for this item!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        if (pPlayer->AddItem(item, count))
+                        {
+                            CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                            sprintf(str,"Your points are taken and your item is given!!!");
+                            pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        }
+                        else
+                        {
+                            sprintf(str,"Item can't be given(your bag is full or you already got the item!)!");
+                            pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        }
+
+                    }
+                }
+                break;
+                case 4: // type 4 = race change
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken, Please Relog!!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
+                        CharacterDatabase.PExecute("UPDATE characters SET at_login = at_login | '128' WHERE guid = %u", pPlayer->GetGUIDLow());
+
+                    }
+                break;
+                case 5: // type 5 = faction change
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken, Please Relog!!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
+                        CharacterDatabase.PExecute("UPDATE characters SET at_login = at_login | '64' WHERE guid = %u", pPlayer->GetGUIDLow());
+
+                    }
+                break;
+                case 6: // type 6 = cast spell
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->CastSpell(pPlayer, spell, true);
+                        
+                    }
+                    
+                break;
+                 
+
             }
             pPlayer->PlayerTalkClass->ClearMenus();
             OnGossipHello(pPlayer, pCreature);
@@ -65,14 +138,15 @@ class voterewarder : public CreatureScript
 
         bool OnGossipHello(Player* pPlayer, Creature* pCreature)
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Homuch voting points do i have?", GOSSIP_SENDER_MAIN, 1000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Weapons", GOSSIP_SENDER_MAIN, 2000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Rings/Trinkets", GOSSIP_SENDER_MAIN, 3000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Homuch voting points do i have?", GOSSIP_SENDER_MAIN, 1000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Genetic Modifier", GOSSIP_SENDER_MAIN, 2000);
+            //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Rings/Trinkets", GOSSIP_SENDER_MAIN, 3000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "5 x Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "20 x Vote Token - Cost 17 VP", GOSSIP_SENDER_MAIN, 4001);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
             
 
-            pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+            pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
 
             return true;
         }
@@ -84,72 +158,81 @@ class voterewarder : public CreatureScript
             switch (uiAction)
             {
             case 1000:
-                RewardItem(pPlayer, pCreature, 0, 0, 0);
+                Reward(pPlayer, pCreature, 0, 0, 0, 2);
                 break;
             case 2000:
                 pPlayer->PlayerTalkClass->ClearMenus();
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Havoc's Call, Blade of Lordaeron Kings - 70 VP", GOSSIP_SENDER_MAIN, 2001);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Mithrios, Bronzebeard's Legacy - 100 VP", GOSSIP_SENDER_MAIN, 2002);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Shadowmourne - 120 VP", GOSSIP_SENDER_MAIN, 2003);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Archus, Greatstaff of Antonidas - 120 VP", GOSSIP_SENDER_MAIN, 2004);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Royal Scepter of Terenas II - 70 VP", GOSSIP_SENDER_MAIN, 2005);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Glorenzelg, High-Blade of the Silver Hand - 120 VP", GOSSIP_SENDER_MAIN, 2006);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Bloodsurge, Kel'Thuzad's Blade of Agony - 70 VP", GOSSIP_SENDER_MAIN, 2007);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Heaven's Fall, Kryss of a Thousand Lies - 70 VP", GOSSIP_SENDER_MAIN, 2008);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Oathbinder, Charge of the Ranger-General - 120 VP", GOSSIP_SENDER_MAIN, 2009);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Return", GOSSIP_SENDER_MAIN, 9999);
-                pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2001);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2002);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2003);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2004);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2005);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2006);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2007);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2008);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
                 break;
             case 2001:
-                RewardItem(pPlayer, pCreature,50737,1,70); 
+                Reward(pPlayer, pCreature, 0,0,2,6,35466);
                 break;
             case 2002:
-                RewardItem(pPlayer, pCreature,50738,1,100);
+                Reward(pPlayer, pCreature, 0,0,2,6,37805);
                 break;
             case 2003:
-                RewardItem(pPlayer, pCreature,49623,1,120);
+                Reward(pPlayer, pCreature, 0,0,2,6,37808);
                 break;
             case 2004:
-                RewardItem(pPlayer, pCreature,50731,1,120);
+                Reward(pPlayer, pCreature, 0,0,2,6,37809);
                 break;
             case 2005:
-                RewardItem(pPlayer, pCreature,50734,1,70);
+                Reward(pPlayer, pCreature, 0,0,2,6,37810);
                 break;
             case 2006:
-                RewardItem(pPlayer, pCreature,50730,1,120);
+                Reward(pPlayer, pCreature, 0,0,2,6,37811);
                 break;
             case 2007:
-                RewardItem(pPlayer, pCreature,50732,1,70);
+                Reward(pPlayer, pCreature, 0,0,2,6,37807);
                 break;
             case 2008:
-                RewardItem(pPlayer, pCreature,50736,1,70);
-                break;
-            case 2009:
-                RewardItem(pPlayer, pCreature,50735,1,120);
-                break;
-            case 3000:
-                pPlayer->PlayerTalkClass->ClearMenus();                
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[Deathbringers will](heroic) - 60 VP", GOSSIP_SENDER_MAIN, 3001);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Return", GOSSIP_SENDER_MAIN, 9999);
-                pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
-                return true;
-                break;
-            case 3001:
-                RewardItem(pPlayer, pCreature, 50363,1,60);
+                Reward(pPlayer, pCreature, 0,0,2,6,37806);
                 break;
             case 4000:
-                RewardItem(pPlayer,  pCreature, 37829, 1, 5);
+                Reward(pPlayer,  pCreature, 37829, 5, 5);
+                break;
+            case 4001:
+                Reward(pPlayer,  pCreature, 37829, 20, 17);
                 break;
             case 5000:
                 pPlayer->PlayerTalkClass->ClearMenus();
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[Murloc Costume] - 16 VP", GOSSIP_SENDER_MAIN, 5001);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "Return", GOSSIP_SENDER_MAIN, 9999);
-                pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "[Murloc Costume] - 16 VP", GOSSIP_SENDER_MAIN, 5001);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Character Rename - Cost 35 VP", GOSSIP_SENDER_MAIN, 5002);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Race Change - Cost 50 VP", GOSSIP_SENDER_MAIN, 5003);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Faction Change - Cost 100 VP", GOSSIP_SENDER_MAIN, 5004);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "5x Commendation of Bravery - Cost 10 VP", GOSSIP_SENDER_MAIN, 5005);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "10x Champion's Seal - Cost 10 VP", GOSSIP_SENDER_MAIN, 5006);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
                 break;
             case 5001:
-                RewardItem(pPlayer, pCreature, 33079,1,16); 
+                Reward(pPlayer, pCreature, 33079,1,16); 
+                break;
+            case 5002:
+                Reward(pPlayer, pCreature, 0, 0, 35, 1);
+                break;
+            case 5003:
+                Reward(pPlayer, pCreature, 0, 0, 50, 4);
+                break;
+            case 5004:
+                Reward(pPlayer, pCreature, 0, 0, 100, 5);
+                break;
+            case 5005:
+                Reward(pPlayer, pCreature, 45706, 5, 10);
+                break;
+            case 5006:
+                Reward(pPlayer, pCreature, 44990, 10, 10);
                 break;
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();
