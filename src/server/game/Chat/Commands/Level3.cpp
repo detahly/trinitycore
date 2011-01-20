@@ -2991,6 +2991,28 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
             SetSentErrorMessage(true);
             return false;
     }
+    //custom
+    std::string announce;
+
+    switch(mode)
+    {
+        case BAN_ACCOUNT:
+            announce = "Account '";
+            break;
+        case BAN_CHARACTER:
+            announce = "The character '";
+            break;
+        case BAN_IP:
+            announce = "The IP '";
+            break;       
+    }
+
+    announce += nameOrIP.c_str();
+    announce += "' was banned for ";
+    announce += duration;
+    announce += ". The reason is: ";
+    announce += reason;
+    HandleAnnounceCommand(announce.c_str());
 
     return true;
 }
