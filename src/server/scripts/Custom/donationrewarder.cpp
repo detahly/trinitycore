@@ -270,8 +270,7 @@ class donationrewarder : public CreatureScript
                 OnGossipHello(pPlayer, pCreature);
                 break;
             }
-
-            OnGossipHello(pPlayer, pCreature);
+            pPlayer->PlayerTalkClass->ClearMenus();
             return true;
         }
 
