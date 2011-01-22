@@ -2914,6 +2914,15 @@ bool ChatHandler::HandleBanCharacterCommand(const char *args)
             break;
     }
 
+    std::string announce;
+    announce = "Character: '";
+    announce += name.c_str();
+    announce += "' was banned for ";
+    announce += duration;
+    announce += ". The reason is: ";
+    announce += reason;
+    HandleAnnounceCommand(announce.c_str());
+
     return true;
 }
 
