@@ -132,8 +132,11 @@ class donationrewarder : public CreatureScript
                  
 
             }
+
             pPlayer->PlayerTalkClass->ClearMenus();
-            OnGossipHello(pPlayer, pCreature);
+            return;
+
+            //OnGossipHello(pPlayer, pCreature);
         }
 
         bool OnGossipHello(Player* pPlayer, Creature* pCreature)
@@ -226,9 +229,11 @@ class donationrewarder : public CreatureScript
                 break;
             case 4000:
                 Reward(pPlayer,  pCreature, 500600, 1, 5);
+                pPlayer->CLOSE_GOSSIP_MENU();       //fix?
                 break;
             case 4001:
                 Reward(pPlayer,  pCreature, 500600, 4, 18);
+                pPlayer->CLOSE_GOSSIP_MENU();       //fix??
                 break;
             case 5000:
                 pPlayer->PlayerTalkClass->ClearMenus();
@@ -266,7 +271,7 @@ class donationrewarder : public CreatureScript
                 break;
             }
 
-
+            OnGossipHello(pPlayer, pCreature);
             return true;
         }
 
