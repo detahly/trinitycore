@@ -252,15 +252,16 @@ class voterewarder : public CreatureScript
 
             void Reset()
             {
-                SayTimer = 300000; //5min
+                SayTimer = 60000; //1min
             }
 
             void UpdateAI(const uint32 diff)
             {
                 if (SayTimer <= diff)
                 {
+                    //insert into `custom_texts` values('-2000010','Want to earn some voting points(vp) and help the server? Go to http://pure-pvp.com and click on \'Vote Here\'. Help the server and get some cool rewards! You can vote every 12 hours!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','1','0','0','pure-pvp');
                     DoScriptText(-2000010, me);
-                    SayTimer = 300000;
+                    SayTimer = 300000;//5min
                 }
                 else 
                     SayTimer -= diff;
