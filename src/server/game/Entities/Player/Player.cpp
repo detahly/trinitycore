@@ -1596,7 +1596,6 @@ void Player::Update(uint32 p_time)
         return;
 
 	//CUSTOM-- anti grouping!
-	//Player *player = sObjectMgr.GetPlayer(guid);
 	if (/*player->*/GetAreaId() == 3217)
 	{
 		if (GetGroup())
@@ -1608,7 +1607,7 @@ void Player::Update(uint32 p_time)
 	//custom
 	if (!isDead())
 	{
-		if (GetTotalPlayedTime() < 72000 )	//20 hours
+		if (GetTotalPlayedTime() < 10800)	//3 hours
 		{
 			if (!HasAura(31305))
 				CastSpell(this,31305,true);
@@ -7304,7 +7303,7 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, int32 honor, bool pvpt
 		honor_f *= 2;
 
 	if (GetTotalPlayedTime() < 43200) // 12 hours
-		honor_f *= 2;
+		honor_f *= 1.3;
 
     // Back to int now
     honor = int32(honor_f);
