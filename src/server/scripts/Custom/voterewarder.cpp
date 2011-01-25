@@ -18,7 +18,7 @@ class voterewarder : public CreatureScript
         void Reward(Player* pPlayer, Creature* pCreature, int item , int count, int cost, int type = 3, int32 spell = 0)
         {
             QueryResult result;
-            result = CharacterDatabase.PQuery("SELECT votepoints FROM auth.account WHERE id = '%u'", pPlayer->GetSession()->GetAccountId());
+            result = LoginDatabase.PQuery("SELECT votepoints FROM account WHERE id = '%u'", pPlayer->GetSession()->GetAccountId());
             char str[200];
             if (!result) // check
             {
@@ -43,7 +43,7 @@ class voterewarder : public CreatureScript
                     }
                     else
                     {
-                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
                         sprintf(str,"Your points are taken, Please Relog!!!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->SetAtLoginFlag(AT_LOGIN_RENAME);
@@ -68,7 +68,7 @@ class voterewarder : public CreatureScript
                     {
                         if (pPlayer->AddItem(item, count))
                         {
-                            CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                            LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
                             sprintf(str,"Your points are taken and your item is given!!!");
                             pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         }
@@ -89,7 +89,7 @@ class voterewarder : public CreatureScript
                     }
                     else
                     {
-                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
                         sprintf(str,"Your points are taken, Please Relog!!!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
@@ -105,7 +105,7 @@ class voterewarder : public CreatureScript
                     }
                     else
                     {
-                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
                         sprintf(str,"Your points are taken, Please Relog!!!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
@@ -121,7 +121,7 @@ class voterewarder : public CreatureScript
                     }
                     else
                     {
-                        CharacterDatabase.PQuery("Update auth.account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
                         sprintf(str,"Your points are taken!!");
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->CastSpell(pPlayer, spell, true);
@@ -140,7 +140,6 @@ class voterewarder : public CreatureScript
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Howmany voting points do i have?", GOSSIP_SENDER_MAIN, 1000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Genetic Modifier", GOSSIP_SENDER_MAIN, 2000);
-            //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Rings/Trinkets", GOSSIP_SENDER_MAIN, 3000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "5 x Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "20 x Vote Token - Cost 17 VP", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
@@ -243,6 +242,37 @@ class voterewarder : public CreatureScript
 
             return true;
         }
+
+        struct voterewarderAI : public ScriptedAI
+        {
+            // *** HANDLED FUNCTION ***
+            //This is the constructor, called only once when the Creature is first created
+            voterewarderAI(Creature *c) : ScriptedAI(c) {}
+            uint32 SayTimer;
+
+            void Reset()
+            {
+                SayTimer = 300000; //5min
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if (SayTimer <= diff)
+                {
+                    DoScriptText(-2000010, me);
+                    SayTimer = 300000;
+                }
+                else 
+                    SayTimer -= diff;
+            }
+
+        };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new voterewarderAI(pCreature);
+        }
+
 
 };
 
