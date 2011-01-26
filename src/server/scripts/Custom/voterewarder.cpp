@@ -126,11 +126,22 @@ class voterewarder : public CreatureScript
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->CastSpell(pPlayer, spell, true);
                         
-                    }
-                    
+                    }                    
                 break;
-                 
-
+                case 7: // titles
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(spell))
+                    {
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken and the title is given!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->SetTitle(titleEntry, false); 
+                    }
+                break;
             }
             pPlayer->PlayerTalkClass->ClearMenus();
             OnGossipHello(pPlayer, pCreature);
@@ -140,6 +151,7 @@ class voterewarder : public CreatureScript
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Howmany voting points do i have?", GOSSIP_SENDER_MAIN, 1000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Genetic Modifier", GOSSIP_SENDER_MAIN, 2000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 3000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "5 x Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "20 x Vote Token - Cost 17 VP", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
@@ -161,41 +173,78 @@ class voterewarder : public CreatureScript
                 break;
             case 2000:
                 pPlayer->PlayerTalkClass->ClearMenus();
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2001);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2002);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2003);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2004);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2005);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2006);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Male - Cost 2 VP", GOSSIP_SENDER_MAIN, 2007);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Female - Cost 2 VP", GOSSIP_SENDER_MAIN, 2008);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Male - Cost 1 VP", GOSSIP_SENDER_MAIN, 2001);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Human Female - Cost 1 VP", GOSSIP_SENDER_MAIN, 2002);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Male - Cost 1 VP", GOSSIP_SENDER_MAIN, 2003);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Gnome Female - Cost 1 VP", GOSSIP_SENDER_MAIN, 2004);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Male - Cost 1 VP", GOSSIP_SENDER_MAIN, 2005);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Tauren Female - Cost 1 VP", GOSSIP_SENDER_MAIN, 2006);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Male - Cost 1 VP", GOSSIP_SENDER_MAIN, 2007);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Blood Elf Female - Cost 1 VP", GOSSIP_SENDER_MAIN, 2008);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
                 break;
             case 2001:
-                Reward(pPlayer, pCreature, 0,0,2,6,35466);
+                Reward(pPlayer, pCreature, 0,0,1,6,35466);
                 break;
             case 2002:
-                Reward(pPlayer, pCreature, 0,0,2,6,37805);
+                Reward(pPlayer, pCreature, 0,0,1,6,37805);
                 break;
             case 2003:
-                Reward(pPlayer, pCreature, 0,0,2,6,37808);
+                Reward(pPlayer, pCreature, 0,0,1,6,37808);
                 break;
             case 2004:
-                Reward(pPlayer, pCreature, 0,0,2,6,37809);
+                Reward(pPlayer, pCreature, 0,0,1,6,37809);
                 break;
             case 2005:
-                Reward(pPlayer, pCreature, 0,0,2,6,37810);
+                Reward(pPlayer, pCreature, 0,0,1,6,37810);
                 break;
             case 2006:
-                Reward(pPlayer, pCreature, 0,0,2,6,37811);
+                Reward(pPlayer, pCreature, 0,0,1,6,37811);
                 break;
             case 2007:
-                Reward(pPlayer, pCreature, 0,0,2,6,37807);
+                Reward(pPlayer, pCreature, 0,0,1,6,37807);
                 break;
             case 2008:
-                Reward(pPlayer, pCreature, 0,0,2,6,37806);
+                Reward(pPlayer, pCreature, 0,0,1,6,37806);
+                break;
+            case 3000:
+                pPlayer->PlayerTalkClass->ClearMenus();
+                if (pPlayer->TeamForRace(pPlayer->getRace()) == ALLIANCE)
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "KNIGHT - Cost 60VP", GOSSIP_SENDER_MAIN, 3001);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "COMMANDER - Cost 120VP", GOSSIP_SENDER_MAIN, 3002);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "GRAND MARSHAL - COST 250VP", GOSSIP_SENDER_MAIN, 3003);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                }
+                else
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "LEGIONNAIRE - Cost 60VP", GOSSIP_SENDER_MAIN, 3010);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "CHAMPION - Cost 120VP", GOSSIP_SENDER_MAIN, 3011);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "HIGH WARLORD - COST 250VP", GOSSIP_SENDER_MAIN, 3012);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                }
+                pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+                return true;
+                break;
+            case 3001:
+                Reward(pPlayer, pCreature, 0, 0, 60, 7, 6);
+                break;
+            case 3002:
+                Reward(pPlayer, pCreature, 0, 0, 120, 7, 11);
+                break;
+            case 3003:
+                Reward(pPlayer, pCreature, 0, 0, 250, 7, 14);
+                break;
+            case 3010:
+                Reward(pPlayer, pCreature, 0, 0, 60, 7, 22);
+                break;
+            case 3011:
+                Reward(pPlayer, pCreature, 0, 0, 120, 7, 24);
+                break;
+            case 3012:
+                Reward(pPlayer, pCreature, 0, 0, 250, 7, 28);
                 break;
             case 4000:
                 Reward(pPlayer,  pCreature, 37829, 5, 5);
@@ -238,8 +287,6 @@ class voterewarder : public CreatureScript
                 OnGossipHello(pPlayer, pCreature);
                 break;
             }
-
-
             return true;
         }
 

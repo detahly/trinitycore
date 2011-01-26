@@ -126,11 +126,22 @@ class donationrewarder : public CreatureScript
                         pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
                         pPlayer->CastSpell(pPlayer, spell, true);
                         
-                    }
-                    
+                    }                    
                 break;
-                 
-
+                case 7: // titles
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(spell))
+                    {
+                        LoginDatabase.PQuery("Update account Set dp = dp - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your points are taken and the title is given!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->SetTitle(titleEntry, false); 
+                    }
+                break;
             }
             pPlayer->PlayerTalkClass->ClearMenus();
             OnGossipHello(pPlayer, pCreature);
@@ -144,6 +155,7 @@ class donationrewarder : public CreatureScript
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "1 x Donation Coin - Cost 5 dp", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "4 x Donation Coin - Cost 18 dp", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 6000);
             
 
             pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -266,6 +278,43 @@ class donationrewarder : public CreatureScript
             case 5006:
                 Reward(pPlayer, pCreature, 44990, 200, 8);
                 break;
+            case 6000:
+                pPlayer->PlayerTalkClass->ClearMenus();
+                if (pPlayer->TeamForRace(pPlayer->getRace()) == ALLIANCE)
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "KNIGHT - Cost 3DP", GOSSIP_SENDER_MAIN, 6001);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "COMMANDER - Cost 6DP", GOSSIP_SENDER_MAIN, 6002);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "GRAND MARSHAL - COST 12DP", GOSSIP_SENDER_MAIN, 6003);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                }
+                else
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "LEGIONNAIRE - Cost 3DP", GOSSIP_SENDER_MAIN, 6010);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "CHAMPION - Cost 6DP", GOSSIP_SENDER_MAIN, 6011);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "HIGH WARLORD - COST 12DP", GOSSIP_SENDER_MAIN, 6012);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
+                }
+                pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+                return true;
+                break;
+            case 6001:
+                Reward(pPlayer, pCreature, 0, 0, 3, 7, 6);
+                break;
+            case 6002:
+                Reward(pPlayer, pCreature, 0, 0, 6, 7, 11);
+                break;
+            case 6003:
+                Reward(pPlayer, pCreature, 0, 0, 12, 7, 14);
+                break;
+            case 6010:
+                Reward(pPlayer, pCreature, 0, 0, 3, 7, 22);
+                break;
+            case 6011:
+                Reward(pPlayer, pCreature, 0, 0, 6, 7, 24);
+                break;
+            case 6012:
+                Reward(pPlayer, pCreature, 0, 0, 12, 7, 28);
+                break;
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);
@@ -273,6 +322,37 @@ class donationrewarder : public CreatureScript
             }
 
             return true;
+        }
+
+        struct donationrewarderAI : public ScriptedAI
+        {
+            // *** HANDLED FUNCTION ***
+            //This is the constructor, called only once when the Creature is first created
+            donationrewarderAI(Creature *c) : ScriptedAI(c) {}
+            uint32 SayTimer;
+
+            void Reset()
+            {
+                SayTimer = 120000; //1min
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if (SayTimer <= diff)
+                {
+                    //insert into `custom_texts` values('-2000010','Want to earn some voting points(vp) and help the server? Go to http://pure-pvp.com and click on \'Vote Here\'. Help the server and get some cool rewards! You can vote every 12 hours!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','1','0','0','pure-pvp');
+                    DoScriptText(-2000011, me);
+                    SayTimer = 720000;//12min
+                }
+                else 
+                    SayTimer -= diff;
+            }
+
+        };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new donationrewarderAI(pCreature);
         }
 
 };
