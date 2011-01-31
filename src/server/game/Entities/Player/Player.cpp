@@ -7163,6 +7163,9 @@ void Player::UpdateArea(uint32 newArea)
 	if (newArea == 1)
 		SetPvP(false);
 
+    if (newArea == 15)
+        SetPvP(true);
+
     // FFA_PVP flags are area and not zone id dependent
     // so apply them accordingly
     m_areaUpdateId    = newArea;
@@ -20337,7 +20340,7 @@ void Player::UpdatePvPState(bool onlyFFA)
 void Player::UpdatePvP(bool state, bool override)
 {
 	//custom
-	if (GetAreaId() == 1) // dont let change this if in the duel zone
+	if (GetAreaId() == 1 || GetAreaId() == 15) // dont let change this if in the duel zone
 		return;
 
     if (!state || override)
