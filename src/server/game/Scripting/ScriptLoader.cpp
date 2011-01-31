@@ -25,6 +25,7 @@ void AddSC_boss_pvp();
 void AddSC_welcome_script();
 void AddSC_voterewarder();
 void AddSC_donationrewarder();
+void AddSC_ipcheck();
 
 //examples
 void AddSC_example_creature();
@@ -1223,5 +1224,6 @@ void AddCustomScripts()
 	AddSC_welcome_script();
     AddSC_voterewarder();
     AddSC_donationrewarder();
+    AddSC_ipcheck();
 #endif
 }

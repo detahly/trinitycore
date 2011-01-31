@@ -6,6 +6,7 @@ set(scripts_STAT_SRCS
   Custom/welcome.cpp
   Custom/voterewarder.cpp
   Custom/donationrewarder.cpp
+  Custom/antihack.cpp
 )
 
 message("  -> Prepared: Custom")
