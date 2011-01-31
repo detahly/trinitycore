@@ -142,6 +142,26 @@ class voterewarder : public CreatureScript
                         pPlayer->SetTitle(titleEntry, false); 
                     }
                 break;
+                case 8: //teleport
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        int map;
+                        float x,y,z,orientation;
+                        map = 1;        //dire maul
+                        x = -3760.30f;
+                        y = 1127.99f;
+                        z = 132.0f;
+                        orientation = 4.72f;
+                        LoginDatabase.PQuery("Update account Set votepoints = votepoints - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        pPlayer->TeleportTo(map,x,y,z,orientation); 
+                        if (pPlayer->HasAura(58729))
+                            pPlayer->RemoveAura(58729);
+                    }
             }
             pPlayer->PlayerTalkClass->ClearMenus();
             OnGossipHello(pPlayer, pCreature);
@@ -155,6 +175,7 @@ class voterewarder : public CreatureScript
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "5 x Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "20 x Vote Token - Cost 17 VP", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Champion's Seal Arena(FFA) - 1VP", GOSSIP_SENDER_MAIN, 6000);
             
 
             pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -282,6 +303,8 @@ class voterewarder : public CreatureScript
             case 5006:
                 Reward(pPlayer, pCreature, 44990, 10, 10);
                 break;
+            case 6000:
+                Reward(pPlayer, pCreature, 0, 0, 1, 8);
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);
