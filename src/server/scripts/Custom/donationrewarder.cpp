@@ -154,6 +154,7 @@ class donationrewarder : public CreatureScript
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Rings/Trinkets", GOSSIP_SENDER_MAIN, 3000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "1 x Donation Coin - Cost 5 dp", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "4 x Donation Coin - Cost 18 dp", GOSSIP_SENDER_MAIN, 4001);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "50 x Vote Token - Cost 5 dp", GOSSIP_SENDER_MAIN, 4002);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 6000);
             
@@ -244,6 +245,12 @@ class donationrewarder : public CreatureScript
                 break;
             case 4001:
                 Reward(pPlayer,  pCreature, 500600, 4, 18);
+                pPlayer->CLOSE_GOSSIP_MENU();       //fix?
+                pPlayer->PlayerTalkClass->ClearMenus();
+                OnGossipHello(pPlayer, pCreature);
+                break;
+            case 4002:
+                Reward(pPlayer,  pCreature, 37829, 50, 5);
                 pPlayer->CLOSE_GOSSIP_MENU();       //fix?
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);
