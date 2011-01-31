@@ -17,21 +17,9 @@ class System_OnPVPKill : public PlayerScript
 
 	void OnLogin(Player* pPlayer)
 	{
-		if (pPlayer->IsInWorld())
-		{
-			char str[200];
-			sprintf(str,"Hello %s . Enjoy your stay on District 10!", pPlayer->GetName());
-			pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true); //send welcome message ;)
-		}
-		else
-		{
-			if (pPlayer->IsInWorld())
-			{
-				char str[200];
-				sprintf(str,"Hello %s . Enjoy your stay on District 10!", pPlayer->GetName());
-				pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true); //send welcome message ;)
-			}
-		}
+		char str[200];
+		sprintf(str,"Hello %s . Enjoy your stay on District 10!", pPlayer->GetName());
+		pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true); //send welcome message ;) 
 	}	
 
 	void OnPVPKill(Player *killer, Player *killed)
@@ -64,9 +52,11 @@ class System_OnPVPKill : public PlayerScript
 						KillingStreak[kGUID].KillStreak++;      // add 1 killstreak
 						KillingStreak[kGUID].LastGUIDKill = vGUID; // remember last killed
 							if (killer->GetAreaId() == 3217)
-							{
-								killer->AddItem(54637, 1);
-							}
+								killer->AddItem(44990, 1);
+
+                            if (killer->GetAreaId() == 15)
+                                killer->AddItem(54637, 4);
+
 						char str[200];
 						sprintf(str,"Your KillStreak is %u !! Keep going!!", KillingStreak[kGUID].KillStreak);
 						killer->MonsterWhisper(str,kGUID,true); //reminder
