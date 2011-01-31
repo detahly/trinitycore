@@ -54,7 +54,7 @@ class System_OnPVPKill : public PlayerScript
 							if (killer->GetAreaId() == 3217)
 								killer->AddItem(44990, 1);
 
-                            if (killer->GetAreaId() == 15)
+                            if (killer->GetAreaId() == 513)
                                 killer->AddItem(54637, 4);
 
 						char str[200];
