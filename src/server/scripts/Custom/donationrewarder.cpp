@@ -238,13 +238,13 @@ class donationrewarder : public CreatureScript
                 Reward(pPlayer,  pCreature, 50363, 1, 4);
                 break;
             case 4000:
-                Reward(pPlayer,  pCreature, 500600, 1, 5);
+                Reward(pPlayer,  pCreature, 41596, 1, 5);
                 pPlayer->CLOSE_GOSSIP_MENU();       //fix?
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);
                 break;
             case 4001:
-                Reward(pPlayer,  pCreature, 500600, 4, 18);
+                Reward(pPlayer,  pCreature, 41596, 4, 18);
                 pPlayer->CLOSE_GOSSIP_MENU();       //fix?
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);
