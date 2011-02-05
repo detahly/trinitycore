@@ -7,6 +7,7 @@ set(scripts_STAT_SRCS
   Custom/voterewarder.cpp
   Custom/donationrewarder.cpp
   Custom/antihack.cpp
+  Custom/lichking_visual.cpp
 )
 
 message("  -> Prepared: Custom")

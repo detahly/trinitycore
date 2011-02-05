@@ -26,6 +26,7 @@ void AddSC_welcome_script();
 void AddSC_voterewarder();
 void AddSC_donationrewarder();
 void AddSC_ipcheck();
+void AddSC_lichking_visual();
 
 //examples
 void AddSC_example_creature();
@@ -1225,5 +1226,6 @@ void AddCustomScripts()
     AddSC_voterewarder();
     AddSC_donationrewarder();
     AddSC_ipcheck();
+    AddSC_lichking_visual();
 #endif
 }
