@@ -13,14 +13,7 @@ static std::map<uint32, SystemInfo> KillingStreak;
 class System_OnPVPKill : public PlayerScript
 {
         public:
-                System_OnPVPKill() : PlayerScript("System_OnPVPKill") {}
-
-	void OnLogin(Player* pPlayer)
-	{
-		char str[200];
-		sprintf(str,"Hello %s . Enjoy your stay on District 10!", pPlayer->GetName());
-		pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true); //send welcome message ;) 
-	}	
+                System_OnPVPKill() : PlayerScript("System_OnPVPKill") {}	
 
 	void OnPVPKill(Player *killer, Player *killed)
 	{

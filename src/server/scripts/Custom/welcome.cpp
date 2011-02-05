@@ -10,7 +10,7 @@ class welcome_script : public CreatureScript
 		if (pQuest->GetQuestId() == 599998)
 		{
 			char str[200];
-			sprintf(str,"Welcome to District10. We hope you will enjoy our server! Don't forgot to invite your friends too!");
+			sprintf(str,"Welcome to District10. We hope you will enjoy our server! Don't forget to invite your friends too!");
 			pCreature->MonsterSay(str, LANG_UNIVERSAL, pPlayer->GetGUID());
 			pCreature->HandleEmoteCommand(21);
 		}

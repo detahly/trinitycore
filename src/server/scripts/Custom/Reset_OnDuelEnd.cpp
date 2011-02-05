@@ -19,8 +19,6 @@ class Reset_OnDuelEnd : public PlayerScript
                 }
     }
 
-	//UninviteFromGroup();
-	//return ERR_INVITE_RESTRICTED;
 };
 
 void AddSC_Reset_OnDuelEnd()
