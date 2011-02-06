@@ -22,11 +22,12 @@ void AddSC_System_OnPVPKill();
 void AddSC_Reset_OnDuelEnd();
 void AddSC_npc_teleport();
 void AddSC_boss_pvp();
-void AddSC_welcome_script();
+//void AddSC_welcome_script();
 void AddSC_voterewarder();
 void AddSC_donationrewarder();
 void AddSC_ipcheck();
 void AddSC_lichking_visual();
+void AddSC_repairder();
 
 //examples
 void AddSC_example_creature();
@@ -1222,10 +1223,11 @@ void AddCustomScripts()
 	AddSC_Reset_OnDuelEnd();
 	AddSC_npc_teleport();
 	AddSC_boss_pvp();
-	AddSC_welcome_script();
+	//AddSC_welcome_script();
     AddSC_voterewarder();
     AddSC_donationrewarder();
     AddSC_ipcheck();
     AddSC_lichking_visual();
+    AddSC_repairder();
 #endif
 }
