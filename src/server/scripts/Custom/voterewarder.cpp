@@ -171,11 +171,11 @@ class voterewarder : public CreatureScript
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK, "Howmany voting points do i have?", GOSSIP_SENDER_MAIN, 1000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Genetic Modifier", GOSSIP_SENDER_MAIN, 2000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 3000);
+            //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 3000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "5 x Vote Token - Cost 5 VP", GOSSIP_SENDER_MAIN, 4000);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "20 x Vote Token - Cost 17 VP", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Champion's Seal Arena(FFA) - 1VP", GOSSIP_SENDER_MAIN, 6000);
+            //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Champion's Seal Arena(FFA) - 1VP", GOSSIP_SENDER_MAIN, 6000);
             
 
             pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -234,38 +234,12 @@ class voterewarder : public CreatureScript
                 pPlayer->PlayerTalkClass->ClearMenus();
                 if (pPlayer->TeamForRace(pPlayer->getRace()) == ALLIANCE)
                 {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "KNIGHT - Cost 60VP", GOSSIP_SENDER_MAIN, 3001);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "COMMANDER - Cost 120VP", GOSSIP_SENDER_MAIN, 3002);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "GRAND MARSHAL - COST 250VP", GOSSIP_SENDER_MAIN, 3003);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 }
                 else
                 {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "LEGIONNAIRE - Cost 60VP", GOSSIP_SENDER_MAIN, 3010);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "CHAMPION - Cost 120VP", GOSSIP_SENDER_MAIN, 3011);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "HIGH WARLORD - COST 250VP", GOSSIP_SENDER_MAIN, 3012);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 }
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
-                break;
-            case 3001:
-                Reward(pPlayer, pCreature, 0, 0, 60, 7, 6);
-                break;
-            case 3002:
-                Reward(pPlayer, pCreature, 0, 0, 120, 7, 11);
-                break;
-            case 3003:
-                Reward(pPlayer, pCreature, 0, 0, 250, 7, 14);
-                break;
-            case 3010:
-                Reward(pPlayer, pCreature, 0, 0, 60, 7, 22);
-                break;
-            case 3011:
-                Reward(pPlayer, pCreature, 0, 0, 120, 7, 24);
-                break;
-            case 3012:
-                Reward(pPlayer, pCreature, 0, 0, 250, 7, 28);
                 break;
             case 4000:
                 Reward(pPlayer,  pCreature, 37829, 5, 5);
@@ -280,7 +254,7 @@ class voterewarder : public CreatureScript
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Race Change - Cost 50 VP", GOSSIP_SENDER_MAIN, 5003);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Faction Change - Cost 100 VP", GOSSIP_SENDER_MAIN, 5004);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "5x Commendation of Bravery - Cost 10 VP", GOSSIP_SENDER_MAIN, 5005);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "10x Champion's Seal - Cost 10 VP", GOSSIP_SENDER_MAIN, 5006);
+                //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "10x Champion's Seal - Cost 10 VP", GOSSIP_SENDER_MAIN, 5006);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
@@ -300,11 +274,6 @@ class voterewarder : public CreatureScript
             case 5005:
                 Reward(pPlayer, pCreature, 45706, 5, 10);
                 break;
-            case 5006:
-                Reward(pPlayer, pCreature, 44990, 10, 10);
-                break;
-            case 6000:
-                Reward(pPlayer, pCreature, 0, 0, 1, 8);
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();
                 OnGossipHello(pPlayer, pCreature);

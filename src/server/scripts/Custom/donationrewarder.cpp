@@ -156,7 +156,7 @@ class donationrewarder : public CreatureScript
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "4 x Donation Coin - Cost 18 dp", GOSSIP_SENDER_MAIN, 4001);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "50 x Vote Token - Cost 5 dp", GOSSIP_SENDER_MAIN, 4002);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 6000);
+            //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 6000);
             
 
             pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -262,7 +262,7 @@ class donationrewarder : public CreatureScript
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Race Change - Cost 8 dp", GOSSIP_SENDER_MAIN, 5003);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Faction Change - Cost 13 dp", GOSSIP_SENDER_MAIN, 5004);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "40x Commendation of Bravery - Cost 5 dp", GOSSIP_SENDER_MAIN, 5005);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "200x Champion's Seal - Cost 8 dp", GOSSIP_SENDER_MAIN, 5006);
+                //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "200x Champion's Seal - Cost 8 dp", GOSSIP_SENDER_MAIN, 5006);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
@@ -282,45 +282,18 @@ class donationrewarder : public CreatureScript
             case 5005:
                 Reward(pPlayer, pCreature, 45706, 40, 5);
                 break;
-            case 5006:
-                Reward(pPlayer, pCreature, 44990, 200, 8);
-                break;
             case 6000:
                 pPlayer->PlayerTalkClass->ClearMenus();
                 if (pPlayer->TeamForRace(pPlayer->getRace()) == ALLIANCE)
                 {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "KNIGHT - Cost 3DP", GOSSIP_SENDER_MAIN, 6001);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "COMMANDER - Cost 6DP", GOSSIP_SENDER_MAIN, 6002);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "GRAND MARSHAL - COST 12DP", GOSSIP_SENDER_MAIN, 6003);
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 }
                 else
                 {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "LEGIONNAIRE - Cost 3DP", GOSSIP_SENDER_MAIN, 6010);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "CHAMPION - Cost 6DP", GOSSIP_SENDER_MAIN, 6011);
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "HIGH WARLORD - COST 12DP", GOSSIP_SENDER_MAIN, 6012);
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_INTERACT_1, "Return", GOSSIP_SENDER_MAIN, 9999);
                 }
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
-                break;
-            case 6001:
-                Reward(pPlayer, pCreature, 0, 0, 3, 7, 6);
-                break;
-            case 6002:
-                Reward(pPlayer, pCreature, 0, 0, 6, 7, 11);
-                break;
-            case 6003:
-                Reward(pPlayer, pCreature, 0, 0, 12, 7, 14);
-                break;
-            case 6010:
-                Reward(pPlayer, pCreature, 0, 0, 3, 7, 22);
-                break;
-            case 6011:
-                Reward(pPlayer, pCreature, 0, 0, 6, 7, 24);
-                break;
-            case 6012:
-                Reward(pPlayer, pCreature, 0, 0, 12, 7, 28);
                 break;
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();
