@@ -872,6 +872,8 @@ void Battleground::EndBattleground(uint32 winner)
                 if (!plr->GetRandomWinner())
                     plr->SetRandomWinner(true);
             }
+            if (!isArena() && !isRated())
+                plr->ModifyMoney(50000);
 
             plr->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_WIN_BG, 1);
         }
@@ -1367,8 +1369,7 @@ void Battleground::UpdatePlayerScore(Player *Source, uint32 type, uint32 value, 
             break;
         case SCORE_HONORABLE_KILLS:                         // Honorable kills
             itr->second->HonorableKills += value;
-			if ((itr->second->HonorableKills) % 5 == 0)  //custom
-				Source->AddItem(44990,1);
+			Source->ModifyMoney(2500);          //custom
             break;
         case SCORE_BONUS_HONOR:                             // Honor bonus
             // do not add honor in arenas
