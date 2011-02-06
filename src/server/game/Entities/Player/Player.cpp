@@ -7064,6 +7064,69 @@ void Player::ModifyHonorPoints(int32 value)
     }
     else
         SetHonorPoints(GetHonorPoints() < sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS));
+
+    //custom titlesystem
+    uint32 lifetimekills = killer->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
+
+    switch(lifetimekills)
+    {
+        case 200:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 1 : 15))
+            SetTitle(titleEntry, false);
+        break;
+        case 400:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 2 : 16))
+            SetTitle(titleEntry, false);
+        break;
+        case 700:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 3 : 17))
+            SetTitle(titleEntry, false);                
+        break;
+        case 1100:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 4 : 18))
+            SetTitle(titleEntry, false);
+        break;
+        case 1500:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 5 : 19))
+            SetTitle(titleEntry, false);
+        break;
+        case 2000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 6 : 20))
+            SetTitle(titleEntry, false);
+        break;
+        case 2500:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 7 : 21))
+            SetTitle(titleEntry, false);
+        break;
+        case 3000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 8 : 22))
+            SetTitle(titleEntry, false);
+        break;
+        case 3500:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 9 : 23))
+            SetTitle(titleEntry, false);
+        break;
+        case 4000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 10 : 24))
+            SetTitle(titleEntry, false);
+        break;
+        case 5000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 11 : 25))
+            SetTitle(titleEntry, false);
+        break;
+        case 7500:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 12 : 26))
+            SetTitle(titleEntry, false);
+        break;
+        case 10000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 13 : 27))
+            SetTitle(titleEntry, false);
+        break;
+        case 15000:
+        if (CharTitlesEntry const* titleEntry = sCharTitlesStore.LookupEntry(TeamForRace(getRace()) == ALLIANCE ? 14 : 28))
+            SetTitle(titleEntry, false);
+        break;
+    }
 }
 
 void Player::ModifyArenaPoints(int32 value)
@@ -22799,6 +22862,11 @@ void Player::SetTitle(CharTitlesEntry const* title, bool lost)
             return;
 
         SetFlag(PLAYER__FIELD_KNOWN_TITLES + fieldIndexOffset, flag);
+
+        //custom
+        char gratz[200];
+        sprintf(gratz, "You have received a title!");
+        MonsterWhisper(gratz,this->GetGUID(),true); //reminder
     }
 
     WorldPacket data(SMSG_TITLE_EARNED, 4 + 4);
