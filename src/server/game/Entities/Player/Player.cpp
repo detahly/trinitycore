@@ -1274,16 +1274,6 @@ void Player::Update(uint32 p_time)
 		}
 	}
 
-	//custom
-	if (!isDead())
-	{
-		if (GetTotalPlayedTime() < 10800)	//3 hours
-		{
-			if (!HasAura(31305))
-				CastSpell(this,31305,true);
-		}
-	}
-
     sAnticheatMgr->HandleHackDetectionTimer(this, p_time);
 
     // undelivered mail
@@ -7066,7 +7056,7 @@ void Player::ModifyHonorPoints(int32 value)
         SetHonorPoints(GetHonorPoints() < sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS));
 
     //custom titlesystem
-    uint32 lifetimekills = killer->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
+    uint32 lifetimekills = GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
 
     switch(lifetimekills)
     {
@@ -7131,10 +7121,6 @@ void Player::ModifyHonorPoints(int32 value)
 
 void Player::ModifyArenaPoints(int32 value)
 {
-	//custom
-	if (GetTotalPlayedTime() < 43200)
-		value *= 2;
-
     if (value < 0)
     {
         if (GetArenaPoints() > sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS))
