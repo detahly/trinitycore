@@ -15,7 +15,7 @@ class donationrewarder : public CreatureScript
         {
         }
 
-        void Reward(Player* pPlayer, Creature* pCreature, int item , int count, int cost, int type = 3, int32 spell = 0)
+        void Reward(Player* pPlayer, Creature* pCreature, int item , int count, int cost, int type = 3, int32 spell = 0, int32 gold = 0)
         {
             QueryResult result;
             result = LoginDatabase.PQuery("SELECT dp FROM account WHERE id = '%u'", pPlayer->GetSession()->GetAccountId());
@@ -142,6 +142,22 @@ class donationrewarder : public CreatureScript
                         pPlayer->SetTitle(titleEntry, false); 
                     }
                 break;
+                case 8:
+                {
+                    if (points < cost)
+                    {
+                        sprintf(str,"You don't have enough points to do that!!!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                    }
+                    else
+                    {
+                        LoginDatabase.PQuery("Update account Set dp = dp - '%u' WHERE id = '%u'", cost, pPlayer->GetSession()->GetAccountId());
+                        sprintf(str,"Your gold is given!");
+                        pPlayer->MonsterWhisper(str,pPlayer->GetGUID(),true);
+                        pPlayer->ModifyMoney(gold*10000);
+                    }
+
+                }
             }
             pPlayer->PlayerTalkClass->ClearMenus();
             OnGossipHello(pPlayer, pCreature);
@@ -157,6 +173,8 @@ class donationrewarder : public CreatureScript
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "50 x Vote Token - Cost 5 dp", GOSSIP_SENDER_MAIN, 4002);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Other Stuff", GOSSIP_SENDER_MAIN, 5000);
             //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "Titles", GOSSIP_SENDER_MAIN, 6000);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, "500g - Cost 10dp", GOSSIP_SENDER_MAIN, 7000);
+
             
 
             pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -294,6 +312,9 @@ class donationrewarder : public CreatureScript
                 }
                 pPlayer->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
                 return true;
+                break;
+            case 7000:
+                Reward(pPlayer, pCreature, 0, 0, 10, 8, 0, 500);
                 break;
             case 9999:
                 pPlayer->PlayerTalkClass->ClearMenus();

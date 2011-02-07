@@ -39,6 +39,7 @@ class System_OnPVPKill : public PlayerScript
 						char str[200];
 						sprintf(str,"Your KillStreak is %u !! Keep going!!", KillingStreak[kGUID].KillStreak);
 						killer->MonsterWhisper(str,kGUID,true); //reminder
+                        killer->AddItem(90000, 1);
 					}
 				}
 
