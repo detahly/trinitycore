@@ -728,10 +728,6 @@ class spell_gen_parachute_wg : public SpellScriptLoader
 
                 if (target->ToPlayer()->m_movementInfo.fallTime > 2000)
                     target->CastSpell(target,SPELL_PARACHUTE_WG,true);
-            }
-
-            void Register()
-            {
                 OnEffectPeriodic += AuraEffectPeriodicFn(spell_gen_parachute_wgAuraScript::HandleTriggerSpell, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
             }
         };
@@ -739,6 +735,47 @@ class spell_gen_parachute_wg : public SpellScriptLoader
         AuraScript *GetAuraScript() const
         {
             return new spell_gen_parachute_wgAuraScript();
+        }
+};
+
+class spell_gen_dungeon_credit : public SpellScriptLoader
+{
+    public:
+        spell_gen_dungeon_credit() : SpellScriptLoader("spell_gen_dungeon_credit") { }
+
+        class spell_gen_dungeon_credit_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_dungeon_credit_SpellScript);
+
+            bool Load()
+            {
+                _handled = false;
+                return true;
+            }
+
+            void CreditEncounter()
+            {
+                // This hook is executed for every target, make sure we only credit instance once
+                if (_handled)
+                    return;
+
+                _handled = true;
+                if (GetCaster()->GetTypeId() == TYPEID_UNIT)
+                    if (InstanceScript* instance = GetCaster()->GetInstanceScript())
+                        instance->UpdateEncounterState(ENCOUNTER_CREDIT_CAST_SPELL, GetSpellInfo()->Id, GetCaster());
+            }
+
+            void Register()
+            {
+                AfterHit += SpellHitFn(spell_gen_dungeon_credit_SpellScript::CreditEncounter);
+            }
+
+            bool _handled;
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_dungeon_credit_SpellScript();
         }
 };
 
@@ -761,4 +798,5 @@ void AddSC_generic_spell_scripts()
     new spell_gen_parachute_ic();
 	new spell_gen_parachute_wg();
     new spell_gen_gunship_portal();
+    new spell_gen_dungeon_credit();
 }
