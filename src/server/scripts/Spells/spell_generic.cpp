@@ -730,6 +730,11 @@ class spell_gen_parachute_wg : public SpellScriptLoader
                     target->CastSpell(target,SPELL_PARACHUTE_WG,true);
                 OnEffectPeriodic += AuraEffectPeriodicFn(spell_gen_parachute_wgAuraScript::HandleTriggerSpell, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
             }
+
+            void Register()
+            {
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_gen_parachute_wgAuraScript::HandleTriggerSpell, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);	
+            }
         };
 
         AuraScript *GetAuraScript() const
