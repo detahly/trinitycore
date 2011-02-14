@@ -300,7 +300,7 @@ class voterewarder : public CreatureScript
                 {
                     //insert into `custom_texts` values('-2000010','Want to earn some voting points(vp) and help the server? Go to http://pure-pvp.com and click on \'Vote Here\'. Help the server and get some cool rewards! You can vote every 12 hours!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','1','0','0','pure-pvp');
                     DoScriptText(-2000010, me);
-                    SayTimer = 360000;//6min
+                    SayTimer = 720000;//12min
                 }
                 else 
                     SayTimer -= diff;
