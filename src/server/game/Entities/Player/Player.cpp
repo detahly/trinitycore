@@ -632,6 +632,8 @@ Player::Player (WorldSession *session): Unit(), m_achievementMgr(this), m_reputa
 
     isDebugAreaTriggers = false;
 
+    sAnticheatMgr->DeletePlayerReport(this);
+
     SetPendingBind(NULL, 0);
 
     sAnticheatMgr->DeletePlayerReport(this);
@@ -639,6 +641,8 @@ Player::Player (WorldSession *session): Unit(), m_achievementMgr(this), m_reputa
 
 Player::~Player ()
 {
+    sAnticheatMgr->DeletePlayerReport(this);
+
     // it must be unloaded already in PlayerLogout and accessed only for loggined player
     //m_social = NULL;
 

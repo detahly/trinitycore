@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS `players_reports_status`;
 
+
+
 CREATE TABLE `players_reports_status` (
   `guid` int(10) unsigned NOT NULL DEFAULT '0',
   `creation_time` int(10) unsigned NOT NULL DEFAULT '0',
@@ -10,5 +12,6 @@ CREATE TABLE `players_reports_status` (
   `jump_reports` bigint(20) unsigned NOT NULL DEFAULT '0',
   `waterwalk_reports` bigint(20) unsigned NOT NULL DEFAULT '0',
   `teleportplane_reports` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `climb_reports` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='';
