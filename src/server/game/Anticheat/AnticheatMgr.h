@@ -27,7 +27,6 @@ enum ReportTypes
     MAX_REPORT_TYPES
 };
 
-const std::string report_types[MAX_REPORT_TYPES] = {"speed_reports", "fly_reports", "waterwalk_reports", "jump_reports", "teleportplane_reports" };
 const std::string report_types[MAX_REPORT_TYPES] = {"speed_reports", "fly_reports", "waterwalk_reports", "jump_reports", "teleportplane_reports", "climb_reports" };
 
 class AnticheatMgr
