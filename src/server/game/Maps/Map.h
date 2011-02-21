@@ -370,15 +370,30 @@ class Map : public GridRefManager<NGridType>
         bool IsRegularDifficulty() const { return GetDifficulty() == REGULAR_DIFFICULTY; }
         MapDifficulty const* GetMapDifficulty() const;
 
-        bool Instanceable() const { return i_mapEntry && i_mapEntry->Instanceable(); }
+        bool Instanceable() const { 
+            if (i_mapEntry->MapID == 30)
+                return false;
+
+            return i_mapEntry && i_mapEntry->Instanceable(); 
+        }
         bool IsDungeon() const { return i_mapEntry && i_mapEntry->IsDungeon(); }
         bool IsNonRaidDungeon() const { return i_mapEntry && i_mapEntry->IsNonRaidDungeon(); }
         bool IsRaid() const { return i_mapEntry && i_mapEntry->IsRaid(); }
         bool IsRaidOrHeroicDungeon() const { return IsRaid() || i_spawnMode > DUNGEON_DIFFICULTY_NORMAL; }
         bool IsHeroic() const { return IsRaid() ? i_spawnMode >= RAID_DIFFICULTY_10MAN_HEROIC : i_spawnMode >= DUNGEON_DIFFICULTY_HEROIC; }
-        bool IsBattleground() const { return i_mapEntry && i_mapEntry->IsBattleground(); }
+        bool IsBattleground() const {
+            if (i_mapEntry->MapID == 30)
+                return false;
+
+            return i_mapEntry && i_mapEntry->IsBattleground(); 
+        }
         bool IsBattleArena() const { return i_mapEntry && i_mapEntry->IsBattleArena(); }
-        bool IsBattlegroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattlegroundOrArena(); }
+        bool IsBattlegroundOrArena() const {
+            if (i_mapEntry->MapID == 30)
+                return false;
+
+            return i_mapEntry && i_mapEntry->IsBattlegroundOrArena(); 
+        }
         bool GetEntrancePos(int32 &mapid, float &x, float &y)
         {
             if (!i_mapEntry)
