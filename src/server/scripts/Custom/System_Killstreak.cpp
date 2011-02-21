@@ -49,18 +49,45 @@ class System_OnPVPKill : public PlayerScript
 				switch(KillingStreak[kGUID].KillStreak)
 				{
 			        char msg[200];
+                    case 2:
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
+						sWorld->SendZoneText(killer->GetZoneId(), msg);
+						killer->ModifyMoney(1000);
+						break;
+                    case 5:
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
+						sWorld->SendZoneText(killer->GetZoneId(), msg);
+						killer->AddItem(45706, 1);
+						break;
+                    case 10:
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
+						sWorld->SendZoneText(killer->GetZoneId(), msg);
+						killer->AddItem(45706, 2);
+						break;
+                    case 15:
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
+						sWorld->SendZoneText(killer->GetZoneId(), msg);
+						killer->AddItem(45706, 2);
+                        killer->ModifyMoney(2500);
+						break;
+                    case 20:
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
+						sWorld->SendZoneText(killer->GetZoneId(), msg);
+						killer->AddItem(45706, 3);
+                        killer->ModifyMoney(2500);
+						break;
                     case 25:
-						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a 25 killstreak. ", killer->GetName(), killed->GetName());
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
 						sWorld->SendZoneText(killer->GetZoneId(), msg);
 						killer->CastSpell(killer,42074,true);
 						break;
                     case 50:
-						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a 50 killstreak. ", killer->GetName(), killed->GetName());
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
 						sWorld->SendZoneText(killer->GetZoneId(), msg);
                         killer->CastSpell(killer,72100,true);
 						break;
                     case 75:
-						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a 75 killstreak. ", killer->GetName(), killed->GetName());
+						sprintf(msg, "[Hardcore PvP System]: %s killed %s and is on a %u killstreak. ", killer->GetName(), killed->GetName(), KillingStreak[kGUID].KillStreak);
 						sWorld->SendZoneText(killer->GetZoneId(), msg);
 						killer->CastSpell(killer,54142,true);
 						break;
