@@ -189,12 +189,11 @@ void WorldSession::QueuePacket(WorldPacket *new_packet)
 }
 
 /// Logging helper for unexpected opcodes
-void WorldSession::LogUnexpectedOpcode(WorldPacket *packet, const char *reason)
+void WorldSession::LogUnexpectedOpcode(WorldPacket *packet, const char* status, const char *reason)
 {
-    sLog->outError("SESSION: received unexpected opcode %s (0x%.4X) %s",
-        LookupOpcodeName(packet->GetOpcode()),
-        packet->GetOpcode(),
-        reason);
+    sLog->outError("SESSION (account: %u, guidlow: %u, char: %s): received unexpected opcode %s (0x%.4X, status: %s) %s",
+        GetAccountId(), m_GUIDLow, _player ? _player->GetName() : "<none>", 
+        LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode(), status, reason);
 }
 
 /// Logging helper for unexpected opcodes
@@ -238,7 +237,7 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                         {
                             // skip STATUS_LOGGEDIN opcode unexpected errors if player logout sometime ago - this can be network lag delayed packets
                             if (!m_playerRecentlyLogout)
-                                LogUnexpectedOpcode(packet, "the player has not logged in yet");
+                                LogUnexpectedOpcode(packet, "STATUS_LOGGEDIN", "the player has not logged in yet");
                         }
                         else if (_player->IsInWorld())
                         {
@@ -251,7 +250,8 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                         break;
                     case STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT:
                         if (!_player && !m_playerRecentlyLogout)
-                            LogUnexpectedOpcode(packet, "the player has not logged in yet and not recently logout");
+                            LogUnexpectedOpcode(packet, "STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT",
+                                "the player has not logged in yet and not recently logout");
                         else
                         {
                             // not expected _player or must checked in packet hanlder
@@ -263,9 +263,9 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                         break;
                     case STATUS_TRANSFER:
                         if (!_player)
-                            LogUnexpectedOpcode(packet, "the player has not logged in yet");
+                            LogUnexpectedOpcode(packet, "STATUS_TRANSFER", "the player has not logged in yet");
                         else if (_player->IsInWorld())
-                            LogUnexpectedOpcode(packet, "the player is still in world");
+                            LogUnexpectedOpcode(packet, "STATUS_TRANSFER", "the player is still in world");
                         else
                         {
                             sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
@@ -278,7 +278,7 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                         // prevent cheating with skip queue wait
                         if (m_inQueue)
                         {
-                            LogUnexpectedOpcode(packet, "the player not pass queue yet");
+                            LogUnexpectedOpcode(packet, "STATUS_AUTHED", "the player not pass queue yet");
                             break;
                         }
 
@@ -293,10 +293,14 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                             LogUnprocessedTail(packet);
                         break;
                     case STATUS_NEVER:
-                        sLog->outError("SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
+                        sLog->outError("SESSION (account: %u, guidlow: %u, char: %s): received not allowed opcode %s (0x%.4X)",
+                            GetAccountId(), m_GUIDLow, _player ? _player->GetName() : "<none>",
+                            LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                         break;
                     case STATUS_UNHANDLED:
-                        sLog->outDebug("SESSION: received not handled opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
+                        sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION (account: %u, guidlow: %u, char: %s): received not handled opcode %s (0x%.4X)",
+                            GetAccountId(), m_GUIDLow, _player ? _player->GetName() : "<none>",
+                            LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                         break;
                 }
             }
@@ -306,7 +310,7 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
                         packet->GetOpcode(), GetRemoteAddress().c_str(), GetAccountId());
                 if (sLog->IsOutDebug())
                 {
-                    sLog->outDebug("Dumping error causing packet:");
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "Dumping error causing packet:");
                     packet->hexlike();
                 }
             }
@@ -496,7 +500,7 @@ void WorldSession::LogoutPlayer(bool Save)
         ///- Since each account can only have one online character at any given time, ensure all characters for active account are marked as offline
         //No SQL injection as AccountId is uint32
         CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = '%u'", GetAccountId());
-        sLog->outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
 
     m_playerLogout = false;
@@ -779,7 +783,7 @@ void WorldSession::WriteMovementInfo(WorldPacket *data, MovementInfo *mi)
        *data << mi->t_seat;
     }
 
-    if (mi->HasMovementFlag(MovementFlags(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && mi->HasExtraMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING))
+    if (mi->HasMovementFlag(MovementFlags(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || mi->HasExtraMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING))
         *data << mi->pitch;
 
     *data << mi->fallTime;
@@ -868,10 +872,10 @@ void WorldSession::ReadAddonsInfo(WorldPacket &data)
 
         uint32 currentTime;
         addonInfo >> currentTime;
-        sLog->outDebug("ADDON: CurrentTime: %u", currentTime);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "ADDON: CurrentTime: %u", currentTime);
 
         if (addonInfo.rpos() != addonInfo.size())
-            sLog->outDebug("packet under-read!");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "packet under-read!");
     }
     else
         sLog->outError("Addon packet uncompress error!");
