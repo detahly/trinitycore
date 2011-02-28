@@ -15,6 +15,7 @@
 
 #include "AnticheatMgr.h"
 #include "MapManager.h"
+#include "World.h"
 
 #define CLIMB_ANGLE 1.9f
 
@@ -67,7 +68,7 @@ void AnticheatMgr::BuildReport(Player* player,uint8 reportType)
 void AnticheatMgr::DisableAnticheatDetection(Player* player, bool teleport)
 {
     player->anticheatData.disableACCheck = true;
-    player->anticheatData.disableACCheckTimer = (teleport ? 7000 : 5000);
+    player->anticheatData.disableACCheckTimer = (teleport ? 8000 : 6000);
 }
 
 void AnticheatMgr::HandleHackDetectionTimer(Player* player,uint32 diffTime)
@@ -125,6 +126,9 @@ void AnticheatMgr::FlyHackDetection(Player* player, MovementInfo movementInfo)
 
 void AnticheatMgr::TeleportPlaneHackDetection(Player* player, MovementInfo movementInfo)
 {
+    //disable
+    return;
+
     if (player->anticheatData.lastMovementInfo.pos.GetPositionZ() != 0 ||
         movementInfo.pos.GetPositionZ() != 0)
         return;
@@ -173,6 +177,9 @@ void AnticheatMgr::StartHackDetection(Player* player, MovementInfo movementInfo,
 // basic detection
 void AnticheatMgr::ClimbHackDetection(Player *player, MovementInfo movementInfo, uint32 opcode)
 {
+    //disable
+    return;
+
     if (opcode != MSG_MOVE_HEARTBEAT ||
         player->anticheatData.lastOpcode != MSG_MOVE_HEARTBEAT)
         return;
